@@ -1,12 +1,10 @@
 package com.backpackerapi.backpacker.security.dto;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
-public class LoginUser {
-
+public class Login {
     @NotBlank
     private String username;
-
     @NotBlank
     private String password;
 

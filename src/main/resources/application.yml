@@ -1,0 +1,38 @@
+spring:
+  data:
+    jpa.repositories.enabled: true
+  datasource:
+    initialization-mode: always
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/backpacker_db
+    username: user
+    password: 123
+    continueOnError: true
+  jpa:
+    hibernate:
+#      ddl-auto: create-drop
+      ddl-auto: update
+    generate-ddl: true
+    show-sql: false
+  #  storage size configuration
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+multipart:
+  enable: true
+
+#  storage directory
+files:
+  tourist_places: files//tourist_place
+  hotels: files//hotels
+
+# Security
+jwt:
+  secret: secret
+  expiration: 36000
+
+#app:
+#  jwtCookieName: askme
+#  jwtSecret: askmeSecretKey
+#  jwtExpirationMs: '86400000'

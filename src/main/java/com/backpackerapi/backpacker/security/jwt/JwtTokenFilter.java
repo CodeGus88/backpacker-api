@@ -1,52 +1,50 @@
 package com.backpackerapi.backpacker.security.jwt;
 
 import com.backpackerapi.backpacker.security.service.UserDetailsServiceImpl;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Se ejecuta por cada petición
- * Comprueba la validez del token y que no esté vencido
- * permite acceso al recurso o lanza una excepcción
- */
+@Component
 public class JwtTokenFilter extends OncePerRequestFilter {
 
-    private final static Logger logger = LoggerFactory.getLogger(JwtProvider.class);
+    private final static Logger logger = LoggerFactory.getLogger(JwtTokenFilter.class);
+
     @Autowired
-    private JwtProvider jwtProvider;
+    JwtProvider jwtProvider;
+
     @Autowired
-    private UserDetailsServiceImpl userDetailsServiceImpl;
+    UserDetailsServiceImpl userDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest req,
+                                    HttpServletResponse res,
+                                    FilterChain filterChain
+    ) throws ServletException, IOException {
         try {
-            String token = getToken(request);
+            String token = getToken(req);
             if(token != null && jwtProvider.validateToken(token)){
-                String userName = jwtProvider.getUserNameFromToken(token);
-                UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(userName);
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
+                String nombreUsuario = jwtProvider.getNombreUsuarioFromToken(token);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(nombreUsuario);
+
+                UsernamePasswordAuthenticationToken auth =
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
-
-        }catch(Exception e){
-            logger.error(e.getMessage());
+        } catch (Exception e){
+            logger.error("fail en el método doFilter " + e.getMessage());
         }
-        filterChain.doFilter(request, response);
+        filterChain.doFilter(req, res);
     }
 
     private String getToken(HttpServletRequest request){

@@ -5,18 +5,25 @@ import com.backpackerapi.backpacker.security.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Optional;
 
 @Service
-@Transactional // Mantiene la coherencia de los datos, si hay error hace rollback y vuelve al estado anterior
+@Transactional
 public class UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
     public Optional<User> getByUsername(String username){
         return userRepository.findByUsername(username);
+    }
+
+    public Optional<User> getByUsernameOrEmail(String usernameOrEmail){
+        return userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
+    }
+
+    public Optional<User> getByTokenPassword(String tokenPassword){
+        return userRepository.findByTokenPassword(tokenPassword);
     }
 
     public boolean existsByUsername(String username){
@@ -27,8 +34,7 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public void save(User user) {
+    public void save(User user){
         userRepository.save(user);
     }
-
 }

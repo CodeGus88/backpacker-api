@@ -1,53 +1,41 @@
 package com.backpackerapi.backpacker.security.entity;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import com.backpackerapi.backpacker.models.BaseModel;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User extends BaseModel {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
     @NotNull
     private String name;
     @NotNull
     @Column(unique = true)
     private String username;
     @NotNull
-    @Column(unique = true)
     private String email;
     @NotNull
     private String password;
-//    Relación muchos a muchos
+    private String tokenPassword;
+
     @NotNull
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    public User(){
-
+    public User() {
     }
 
-    public User(String name, String userName, String email, String password) {
+    public User(@NotNull String name, @NotNull String username, @NotNull String email, @NotNull String password) {
         this.name = name;
-        this.username = userName;
+        this.username = username;
         this.email = email;
         this.password = password;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -82,6 +70,14 @@ public class User {
         this.password = password;
     }
 
+    public String getTokenPassword() {
+        return tokenPassword;
+    }
+
+    public void setTokenPassword(String tokenPassword) {
+        this.tokenPassword = tokenPassword;
+    }
+
     public Set<Role> getRoles() {
         return roles;
     }
@@ -89,5 +85,4 @@ public class User {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
-
 }

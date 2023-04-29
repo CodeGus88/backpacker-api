@@ -1,15 +1,16 @@
 package com.backpackerapi.backpacker.security.controller;
 
-import com.backpackerapi.backpacker.dto.Message;
 import com.backpackerapi.backpacker.security.dto.JwtDto;
-import com.backpackerapi.backpacker.security.dto.LoginUser;
-import com.backpackerapi.backpacker.security.dto.NewUser;
+import com.backpackerapi.backpacker.security.dto.Login;
+import com.backpackerapi.backpacker.security.dto.UserRequest;
 import com.backpackerapi.backpacker.security.entity.Role;
 import com.backpackerapi.backpacker.security.entity.User;
-import com.backpackerapi.backpacker.security.enums.Rolename;
+import com.backpackerapi.backpacker.security.enums.ERole;
 import com.backpackerapi.backpacker.security.jwt.JwtProvider;
 import com.backpackerapi.backpacker.security.service.RoleService;
 import com.backpackerapi.backpacker.security.service.UserService;
+import com.backpackerapi.backpacker.utils.Mensaje;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,98 +18,69 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
-import javax.validation.Valid;
-import java.util.ArrayList;
+import java.text.ParseException;
 import java.util.HashSet;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("api/auth")
 @CrossOrigin
 public class AuthController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Autowired
     private AuthenticationManager authenticationManager;
+
     @Autowired
     private UserService userService;
+
     @Autowired
     private RoleService roleService;
+
     @Autowired
     private JwtProvider jwtProvider;
 
-
-    @PostMapping("/create")
-    public ResponseEntity<?> newUser(@Valid @RequestBody NewUser newUser, BindingResult bindingResult){
-        ArrayList<Message> messages = new ArrayList<>();
-        if(bindingResult.hasErrors()){
-            for (ObjectError objectError: bindingResult.getAllErrors()) {
-                messages.add(new Message(
-                        objectError.getCodes()[1],
-                        objectError.getDefaultMessage())
-                );
-            }
-        }
-        if(userService.existsByUsername(newUser.getUsername())) {
-            messages.add(new Message("username", "el nombre ya existe"));
-        }
-        if(userService.existsByEmail(newUser.getEmail())){
-            messages.add(new Message("email", "el email ya existe"));
-        }
-        if(messages.size() == 0){
-            User user = new User(
-                    newUser.getName(),
-                    newUser.getUsername(),
-                    newUser.getEmail(),
-                    passwordEncoder.encode(newUser.getPassword())
-            );
-            Set<Role> roles = new HashSet<>();
-            roles.add(roleService.getByRolename(Rolename.USER).get());
-            if(newUser.getRoles().contains("admin"))
-                roles.add(roleService.getByRolename(Rolename.ADMIN).get());
-            user.setRoles(roles);
-            userService.save(user);
-            messages.add(new Message("Created", "creado correctamente"));
-            return new ResponseEntity(messages, HttpStatus.CREATED);
-        }else{
-            return new ResponseEntity(messages, HttpStatus.BAD_REQUEST);
-        }
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody UserRequest userRequest, BindingResult bindingResult){
+        if(bindingResult.hasErrors())
+            return new ResponseEntity(new Mensaje("campos mal puestos o email inválido"), HttpStatus.BAD_REQUEST);
+        if(userService.existsByUsername(userRequest.getUsername()))
+            return new ResponseEntity(new Mensaje("ese nombre ya existe"), HttpStatus.BAD_REQUEST);
+        if(userService.existsByEmail(userRequest.getEmail()))
+            return new ResponseEntity(new Mensaje("ese email ya existe"), HttpStatus.BAD_REQUEST);
+        User user =
+                new User(userRequest.getName(), userRequest.getUsername(), userRequest.getEmail(),
+                        passwordEncoder.encode(userRequest.getPassword()));
+        Set<Role> roles = new HashSet<>();
+        roles.add(roleService.getByName(ERole.ROLE_USER).get());
+        if(userRequest.getRoles().contains("admin"))
+            roles.add(roleService.getByName(ERole.ROLE_ADMIN).get());
+        user.setRoles(roles);
+        userService.save(user);
+        return new ResponseEntity(new Mensaje("usuario guardado"), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtDto> login(@Valid @RequestBody LoginUser loginUser, BindingResult bindingResult){
-        ArrayList<Message> messages = new ArrayList<>();
-        if(bindingResult.hasErrors()){
-            for (ObjectError objectError: bindingResult.getAllErrors()) {
-                messages.add(new Message(
-                        objectError.getCodes()[1],
-                        objectError.getDefaultMessage())
-                );
-            }
-            return new ResponseEntity(messages, HttpStatus.BAD_REQUEST);
-        }else{
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            loginUser.getUsername(),
-                            loginUser.getPassword()
-                    )
-            );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            String jwt = jwtProvider.generateToken(authentication);
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            JwtDto jwtDto = new JwtDto(
-                    jwt,
-                    userDetails.getUsername(),
-                    userDetails.getAuthorities()
-            );
-            return new ResponseEntity(jwtDto, HttpStatus.OK);
-        }
+    public ResponseEntity<JwtDto> login(@Valid @RequestBody Login login, BindingResult bindingResult){
+        if(bindingResult.hasErrors())
+            return new ResponseEntity(new Mensaje("campos mal puestos"), HttpStatus.BAD_REQUEST);
+        Authentication authentication =
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtProvider.generateToken(authentication);
+        JwtDto jwtDto = new JwtDto(jwt);
+        return new ResponseEntity(jwtDto, HttpStatus.OK);
     }
 
+    @PostMapping("/refresh")
+    public ResponseEntity<JwtDto> refresh(@RequestBody JwtDto jwtDto) throws ParseException {
+        String token = jwtProvider.refreshToken(jwtDto);
+        JwtDto jwt = new JwtDto(token);
+        return new ResponseEntity(jwt, HttpStatus.OK);
+    }
 }

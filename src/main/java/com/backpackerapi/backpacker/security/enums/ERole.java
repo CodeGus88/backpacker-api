@@ -1,6 +1,5 @@
 package com.backpackerapi.backpacker.security.enums;
 
-public enum Rolename {
-    USER,
-    ADMIN
+public enum ERole {
+    ROLE_ADMIN, ROLE_USER
 }

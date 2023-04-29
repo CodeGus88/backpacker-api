@@ -1,7 +1,7 @@
 package com.backpackerapi.backpacker.security.service;
 
 import com.backpackerapi.backpacker.security.entity.Role;
-import com.backpackerapi.backpacker.security.enums.Rolename;
+import com.backpackerapi.backpacker.security.enums.ERole;
 import com.backpackerapi.backpacker.security.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,13 +14,18 @@ import java.util.Optional;
 public class RoleService {
 
     @Autowired
-    private RoleRepository roleRepository;
+    RoleRepository roleRepository;
 
-    public Optional<Role> getByRolename(Rolename roleName){
-        return roleRepository.findByRolename(roleName);
+    public Optional<Role> getByName(ERole ERole){
+        return roleRepository.findByName(ERole);
     }
 
     public void save(Role role){
         roleRepository.save(role);
     }
+
+    public boolean existsByName(ERole name){
+        return roleRepository.existsByName(name);
+    }
+
 }

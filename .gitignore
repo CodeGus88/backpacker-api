@@ -36,7 +36,7 @@ out/
 ### VS Code ###
 .vscode/
 
-### h2 ###
-/data/**
+## H2 ##
+data/
 
 

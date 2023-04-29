@@ -1,6 +1,5 @@
 package com.backpackerapi.backpacker.security.entity;
 
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,33 +8,26 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Implementa los privilegios de cada usuario
- */
 public class MainUser implements UserDetails {
+
     private String name;
-    private String userName;
+    private String username;
     private String email;
     private String password;
-//  Es una clase exclusiva de la segirdad  GrantedAuthority` de security core
-//  ? hace referencia a que es una clase generica
     private Collection<? extends GrantedAuthority> authorities;
 
-    public MainUser(String name, String userName, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public MainUser(String name, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
         this.name = name;
-        this.userName = userName;
+        this.username = username;
         this.email = email;
         this.password = password;
         this.authorities = authorities;
     }
 
-    public static MainUser buid(User user){
+    public static MainUser build(User user){
         List<GrantedAuthority> authorities =
-                user.getRoles().stream().map(
-                  role -> new SimpleGrantedAuthority(
-                          role.getRolename().name()
-                  )
-                ).collect(Collectors.toList());
+                user.getRoles().stream().map(rol -> new SimpleGrantedAuthority(rol
+                .getName().name())).collect(Collectors.toList());
         return new MainUser(user.getName(), user.getUsername(), user.getEmail(), user.getPassword(), authorities);
     }
 
@@ -51,7 +43,7 @@ public class MainUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userName;
+        return username;
     }
 
     @Override
@@ -73,12 +65,12 @@ public class MainUser implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-// gettes
+
     public String getName() {
         return name;
     }
 
-    public String getEmail(){
+    public String getEmail() {
         return email;
     }
 }
