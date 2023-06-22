@@ -1,7 +1,7 @@
 package com.backpackerapi.backpacker.security.service;
 
-import com.backpackerapi.backpacker.security.entity.User;
 import com.backpackerapi.backpacker.security.entity.MainUser;
+import com.backpackerapi.backpacker.security.entity.User;
 import com.backpackerapi.backpacker.security.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,8 +16,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
-        User user = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail).get();
-        return MainUser.build(user);
+    public UserDetails loadUserByUsername(String nombreOrEmail) throws UsernameNotFoundException {
+        User usuario = userRepository.findByUsernameOrEmail(nombreOrEmail, nombreOrEmail)
+                .orElseThrow(()-> new UsernameNotFoundException("ese usuario no existe"));
+        return MainUser.build(usuario);
     }
 }

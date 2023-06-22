@@ -34,10 +34,10 @@ public class JwtProvider {
     private int expiration;
 
     public String generateToken(Authentication authentication) {
-        MainUser mainUser = (MainUser) authentication.getPrincipal();
-        List<String> roles = mainUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+        MainUser usuarioPrincipal = (MainUser) authentication.getPrincipal();
+        List<String> roles = usuarioPrincipal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         return Jwts.builder()
-                .setSubject(mainUser.getUsername())
+                .setSubject(usuarioPrincipal.getUsername())
                 .claim("roles", roles)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + expiration * 180))

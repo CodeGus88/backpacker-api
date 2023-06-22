@@ -2,16 +2,17 @@ package com.backpackerapi.backpacker.security.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-
 import java.util.HashSet;
 import java.util.Set;
 
 public class UserRequest {
-    @NotBlank
+
+    @NotBlank(message = "nombre obligatorio")
     private String name;
-    @NotBlank
+    @NotBlank(message = "nombre de usuario obligatorio")
     private String username;
-    @Email
+    @Email(message = "dirección de email no válida")
+    @NotBlank(message = "email obligatorio")
     private String email;
     @NotBlank
     private String password;

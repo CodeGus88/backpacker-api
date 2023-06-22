@@ -1,20 +1,23 @@
 package com.backpackerapi.backpacker.dtos.tourist_place;
 
+import com.backpackerapi.backpacker.dtos.category.CategoryForRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public class TouristPlaceRequest /*implements Serializable*/ {
+import java.util.Set;
 
-//    private static final long serialVersionUID = 74458L;
+@Data
+@NoArgsConstructor
+public class TouristPlaceRequest {
 
     @NotBlank
     @Size(min = 2, max = 35)
     private String name;
 
-    @NotBlank
-    @Size(min = 1, max = 15)
-    private String category;
+    private String imageIcon;
 
     @NotNull
     private boolean isPublic;
@@ -30,71 +33,32 @@ public class TouristPlaceRequest /*implements Serializable*/ {
     @Size(min = 1, max = 10000)
     private String description;
 
+    private Set<CategoryForRequest> categories;
+
     public TouristPlaceRequest(
             String name,
+            String imageIcon,
             boolean isPublic,
-            String category,
+            Set<CategoryForRequest> categories,
             String resume,
             String keywords,
             String description
     ) {
         this.name = name;
+        this.imageIcon = imageIcon;
         this.isPublic = isPublic;
-        this.category = category;
+        this.categories = categories;
         this.resume = resume;
         this.keywords = keywords;
         this.description = description;
     }
 
-    public TouristPlaceRequest(){
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean getIsPublic() {
+    public boolean getIsPublic(){
         return isPublic;
     }
 
-    public void setIsPublic(boolean isPublic) {
+    public void setIsPublic(boolean isPublic){
         this.isPublic = isPublic;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getResume() {
-        return resume;
-    }
-
-    public void setResume(String resume) {
-        this.resume = resume;
-    }
-
-    public String getKeywords() {
-        return keywords;
-    }
-
-    public void setKeywords(String keywords) {
-        this.keywords = keywords;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
 }

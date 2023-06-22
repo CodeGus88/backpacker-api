@@ -1,11 +1,12 @@
 package com.backpackerapi.backpacker.controllers;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import java.util.Set;
 
 public interface BaseController <ID, ITEM, FORM, DTO>{
 
-    ResponseEntity<Set<ITEM>> findAll();
+    ResponseEntity<Page<ITEM>> findAll(Pageable pageable, String filter);
 
     ResponseEntity<DTO> findById(ID id);
 
@@ -13,6 +14,6 @@ public interface BaseController <ID, ITEM, FORM, DTO>{
 
     ResponseEntity<DTO> update(ID id, FORM request);
 
-    ResponseEntity<Boolean> delete(ID id);
+    ResponseEntity<Boolean> deleteByUuid(ID id);
 
 }

@@ -2,10 +2,12 @@ package com.backpackerapi.backpacker.security.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-public class Login {
-    @NotBlank
+
+public class UserLogin {
+
+    @NotBlank(message = "nombre de usuario/email obligatorio")
     private String username;
-    @NotBlank
+    @NotBlank(message = "contraseña obligatoria")
     private String password;
 
     public String getUsername() {

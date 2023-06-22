@@ -3,75 +3,96 @@ package com.backpackerapi.backpacker.dtos.tourist_place;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class TouristPlaceItem {
+
+public class TouristPlaceItem implements ITouristPlaceItem {
 
     private UUID uuid;
-
     private String name;
-
-    private String image;
-
+    private String imageIcon;
     private String resume;
-
-    private String address;
-
-    private int likes;
-
+    private String categories;
+    private Float rating;
     private LocalDateTime createdAt;
 
+    public TouristPlaceItem(UUID uuid, String name, String imageIcon, String resume, String categories, LocalDateTime createdAt) {
+        this.uuid = uuid;
+        this.name = name;
+        this.imageIcon = imageIcon;
+        this.resume = resume;
+        this.categories = categories;
+        this.createdAt = createdAt;
+    }
+
+    public TouristPlaceItem(){}
+
+    @Override
     public UUID getUuid() {
         return uuid;
     }
 
+    @Override
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
-    public String getImage() {
-        return image;
+    @Override
+    public String getImageIcon() {
+        return imageIcon;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    @Override
+    public void setImageIcon(String imageIcon) {
+        this.imageIcon = imageIcon;
     }
 
+    @Override
     public String getResume() {
         return resume;
     }
 
+    @Override
     public void setResume(String resume) {
         this.resume = resume;
     }
 
-    public String getAddress() {
-        return address;
+    @Override
+    public String getCategories() {
+        return categories;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    @Override
+    public void setCategories(String categories) {
+        this.categories = categories;
     }
 
-    public int getLikes() {
-        return likes;
+    @Override
+    public Float getRating() {
+        return rating;
     }
 
-    public void setLikes(int likes) {
-        this.likes = likes;
+    @Override
+    public void setRating(Float rating) {
+        this.rating = rating;
     }
 
+    @Override
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
+    @Override
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
 }

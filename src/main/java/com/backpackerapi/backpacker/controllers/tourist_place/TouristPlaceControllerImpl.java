@@ -1,27 +1,28 @@
 package com.backpackerapi.backpacker.controllers.tourist_place;
 
+import com.backpackerapi.backpacker.controllers.file.ImageIcon;
+import com.backpackerapi.backpacker.dtos.tourist_place.ITouristPlaceItem;
 import com.backpackerapi.backpacker.dtos.tourist_place.TouristPlaceDto;
 import com.backpackerapi.backpacker.dtos.tourist_place.TouristPlaceRequest;
-import com.backpackerapi.backpacker.dtos.tourist_place.TouristPlaceItem;
+import com.backpackerapi.backpacker.enums.EModule;
+import com.backpackerapi.backpacker.mappers.TouristPlaceMapper;
 import com.backpackerapi.backpacker.services.storange.StorageServiceImpl;
 import com.backpackerapi.backpacker.services.tourist_place.TouristPlaceService;
-import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Set;
+import java.util.Map;
 import java.util.UUID;
 
-@RequestMapping("api/tourist_places")
+@RequestMapping("api/tourist-places")
 @RestController
 @CrossOrigin(origins = "*")
-public class TouristPlaceControllerImpl implements TouristPlaceController {
+public class TouristPlaceControllerImpl implements TouristPlaceController, ImageIcon<TouristPlaceDto> {
 
     @Autowired
     private TouristPlaceService touristPlaceService;
@@ -29,29 +30,15 @@ public class TouristPlaceControllerImpl implements TouristPlaceController {
     @Autowired
     StorageServiceImpl storageService;
 
+    @Autowired
+    private TouristPlaceMapper mapper;
+
     @GetMapping
     @Override
-    public ResponseEntity<Set<TouristPlaceItem>> findAll() {
-        return ResponseEntity.ok(touristPlaceService.findAll());
+    public ResponseEntity<Page<ITouristPlaceItem>> findAll(Pageable pageable, String filter) {
+        Page<ITouristPlaceItem> list = touristPlaceService.findAll(pageable, filter);
+        return ResponseEntity.ok(list);
     }
-
-//    @PreAuthorize("hasRole('USER')")
-    @GetMapping("paged")
-    @Override
-    public ResponseEntity<Page<TouristPlaceItem>> findAllPublicPageable(Pageable pageable) {
-        Page<TouristPlaceItem> page = touristPlaceService.findAllPublicPageable(pageable);
-        return ResponseEntity.ok().body(page);
-    }
-
-//    @PreAuthorize("hasRole('USER')")
-    @GetMapping("/filter/{filter}/paged")
-    @Override
-    public ResponseEntity<Page<TouristPlaceItem>> filterAllPublicPageable(Pageable pageable, @PathVariable("filter") String filter) {
-        Page<TouristPlaceItem> page = touristPlaceService.searchPageable(pageable, filter);
-        return ResponseEntity.ok().body(page);
-    }
-
-
 
     @GetMapping("{uuid}")
     @Override
@@ -62,34 +49,79 @@ public class TouristPlaceControllerImpl implements TouristPlaceController {
         return ResponseEntity.ok().body(touristPlaceDto);
     }
 
-    @PostMapping(value = "create")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("create")
     @Override
     public ResponseEntity<TouristPlaceDto> create(
             @RequestBody @Valid TouristPlaceRequest request
     ) {
-        return ResponseEntity.ok().body(
-                touristPlaceService.save(request)
-        );
+        return ResponseEntity.ok().body(touristPlaceService.save(request));
     }
 
-    @PutMapping("update/{uuid}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/update/{uuid}")
     @Override
-    public ResponseEntity<TouristPlaceDto> update(@PathVariable UUID uuid,  @RequestBody @Valid TouristPlaceRequest request) {
+    public ResponseEntity<TouristPlaceDto> update(
+            @PathVariable UUID uuid,
+            @RequestBody @Valid TouristPlaceRequest request
+    ) {
         if(!touristPlaceService.existById(uuid))
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok().body(touristPlaceService.update(uuid, request));
     }
 
-    @PutMapping("update/image-icon/{uuid}")
-    @Override
-    public ResponseEntity<String> updateImageIcon(@PathVariable UUID uuid, @RequestParam("file") MultipartFile multipartFile) {
-
-        return null;
-    }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("{uuid}")
     @Override
-    public ResponseEntity<Boolean> delete(@PathVariable UUID uuid) {
-        return ResponseEntity.ok().body(touristPlaceService.deleteById(uuid));
+    public ResponseEntity<Boolean> deleteByUuid(@PathVariable UUID uuid) {
+        if(storageService.existDirectoryByName(EModule.TOURIST_PLACES, uuid))
+            storageService.deleteParentDirectory(EModule.TOURIST_PLACES, uuid);
+        if(!storageService.existDirectoryByName(EModule.TOURIST_PLACES, uuid))
+            return ResponseEntity.ok().body(touristPlaceService.deleteById(uuid));
+        return ResponseEntity.ok(false);
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("update/image-icon")
+    @Override
+    public ResponseEntity<TouristPlaceDto> updateImageIcon(
+            @RequestParam("uuid") UUID touristPlaceUuid,
+            @RequestParam("file") MultipartFile file
+    ){
+        //        Verificar si existe el lugar turístico
+        if(touristPlaceService.existById(touristPlaceUuid)){
+            TouristPlaceDto touristPlaceDto = touristPlaceService.findById(touristPlaceUuid);
+            TouristPlaceRequest request = mapper.dtoToRequest(touristPlaceDto);
+        //        Eliminar imagen existente
+            if(touristPlaceDto.getImageIcon() != null && touristPlaceDto.getImageIcon() != "")
+                storageService.deleteFile(EModule.TOURIST_PLACES, touristPlaceUuid, touristPlaceDto.getImageIcon());
+        //        Guardar el archivo
+            Map<String, String> map = storageService.uploadFile(
+                    file,
+                    EModule.TOURIST_PLACES,
+                    touristPlaceUuid
+            );
+        //      Actualizar en la base de datos
+            request.setImageIcon(map.get("name"));
+            return ResponseEntity.ok().body(touristPlaceService.update(touristPlaceUuid, request));
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("remove/image-icon")
+    @Override
+    public ResponseEntity<TouristPlaceDto> removeImageIcon(@RequestParam UUID uuid, @RequestParam String imageIcon) {
+        if(!touristPlaceService.existById(uuid))
+            return ResponseEntity.notFound().build(); //no existe el registro
+        if(imageIcon == "" || imageIcon == null) return ResponseEntity.badRequest().build(); // no existe el archivo recibido
+        if(storageService.existFileByName(EModule.TOURIST_PLACES, uuid, imageIcon))
+            if(!storageService.deleteFile(EModule.TOURIST_PLACES, uuid, imageIcon))
+                return ResponseEntity.notFound().build(); // no existe el archivo solicitado
+        TouristPlaceRequest request = mapper.dtoToRequest(touristPlaceService.findById(uuid));
+        request.setImageIcon(null);
+        return ResponseEntity.ok(touristPlaceService.update(uuid, request));
+    }
+
 }

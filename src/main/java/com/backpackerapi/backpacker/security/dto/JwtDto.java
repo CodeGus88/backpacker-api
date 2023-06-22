@@ -20,5 +20,4 @@ public class JwtDto {
         this.token = token;
     }
 
-
 }

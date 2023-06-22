@@ -1,11 +1,16 @@
 package com.backpackerapi.backpacker.models;
 
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.util.UUID;
 
+
+@Data
+@NoArgsConstructor
 @MappedSuperclass
 public class BaseModel {
 
@@ -13,19 +18,9 @@ public class BaseModel {
     @GeneratedValue
     public UUID uuid;
 
-    public BaseModel(){
-    }
-
     public BaseModel(UUID uuid){
         this.uuid = uuid;
     }
 
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
 
 }

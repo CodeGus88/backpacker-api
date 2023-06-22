@@ -30,11 +30,11 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.4'
 
 //  Dependencias para la seguridad y autentificación
-//	implementation 'org.springframework.boot:spring-boot-starter-security:2.7.4'
-//	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	implementation 'com.okta.spring:okta-spring-boot-starter:3.0.3'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.4'
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
 // Dependencia para las validaciones (compatible con java 10)
 	implementation 'org.springframework.boot:spring-boot-starter-validation:3.0.4'

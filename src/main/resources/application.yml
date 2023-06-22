@@ -13,7 +13,10 @@ spring:
 #      ddl-auto: create-drop
       ddl-auto: update
     generate-ddl: true
-    show-sql: false
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
   #  storage size configuration
   servlet:
     multipart:
@@ -23,16 +26,10 @@ multipart:
   enable: true
 
 #  storage directory
-files:
-  tourist_places: files//tourist_place
-  hotels: files//hotels
+storage: media_directory
 
 # Security
 jwt:
-  secret: secret
-  expiration: 36000
-
-#app:
-#  jwtCookieName: askme
-#  jwtSecret: askmeSecretKey
-#  jwtExpirationMs: '86400000'
+  secret: secretsecretsecretsecretsecretsecretsecretsecret
+  expiration: 72000
+#  expiration: 36000

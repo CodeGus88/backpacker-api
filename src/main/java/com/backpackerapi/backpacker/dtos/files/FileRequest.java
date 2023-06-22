@@ -1,7 +1,15 @@
 package com.backpackerapi.backpacker.dtos.files;
 
-import org.springframework.web.multipart.MultipartFile;
+import lombok.Data;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Data
 public class FileRequest {
-    private MultipartFile file;
+    private UUID uuid;
+    private String file;
+    private UUID entityUuid;
+    private LocalDateTime createdAt;
+    private String tableName;
 }

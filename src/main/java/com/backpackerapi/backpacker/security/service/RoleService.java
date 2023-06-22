@@ -16,16 +16,15 @@ public class RoleService {
     @Autowired
     RoleRepository roleRepository;
 
-    public Optional<Role> getByName(ERole ERole){
+    public Optional<Role> getByRolNombre(ERole ERole){
         return roleRepository.findByName(ERole);
     }
 
-    public void save(Role role){
-        roleRepository.save(role);
+    public void save(Role rol){
+        roleRepository.save(rol);
     }
 
-    public boolean existsByName(ERole name){
-        return roleRepository.existsByName(name);
+    public boolean existsByName(ERole eRole){
+        return roleRepository.existsByName(eRole);
     }
-
 }

@@ -1,10 +1,10 @@
 package com.backpackerapi.backpacker.mappers;
 
-public interface BaseMapper<FORM, ITEM, DTO, ENTITY> {
+public interface BaseMapper<REQUEST, ITEM, DTO, ENTITY> {
 
     DTO entityToDto(ENTITY entity);
 
-    ENTITY requestToEntity(FORM request);
+    ENTITY requestToEntity(REQUEST request);
 
     ITEM entityToItem (ENTITY entity);
 
