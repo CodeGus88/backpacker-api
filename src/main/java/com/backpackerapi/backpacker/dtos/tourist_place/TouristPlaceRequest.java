@@ -17,6 +17,7 @@ public class TouristPlaceRequest {
     @Size(min = 2, max = 35)
     private String name;
 
+    @Size(max = 255)
     private String imageIcon;
 
     @NotNull

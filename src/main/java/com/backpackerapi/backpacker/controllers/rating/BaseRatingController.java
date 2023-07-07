@@ -4,14 +4,22 @@ import com.backpackerapi.backpacker.dtos.rating.IEntityRatingDto;
 import com.backpackerapi.backpacker.dtos.rating.IRatingItem;
 import com.backpackerapi.backpacker.dtos.rating.RatingDto;
 import com.backpackerapi.backpacker.dtos.rating.RatingRequest;
+import com.backpackerapi.backpacker.exceptions.CustomException;
+import com.backpackerapi.backpacker.security.entity.Role;
 import com.backpackerapi.backpacker.security.entity.User;
+import com.backpackerapi.backpacker.security.enums.ERole;
+import com.backpackerapi.backpacker.security.service.RoleService;
 import com.backpackerapi.backpacker.security.service.UserService;
 import com.backpackerapi.backpacker.services.rating.BaseRatingService;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Set;
 import java.util.UUID;
 
 public class BaseRatingController<S extends BaseRatingService> {
@@ -21,6 +29,9 @@ public class BaseRatingController<S extends BaseRatingService> {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RoleService roleService;
 
     @GetMapping("{entityUuid}/{limit}")
     public ResponseEntity<IEntityRatingDto> findLastByEntityUuid(@PathVariable UUID entityUuid, @PathVariable long limit){
@@ -39,27 +50,45 @@ public class BaseRatingController<S extends BaseRatingService> {
         return ResponseEntity.ok(item);
     }
 
-//    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    @RolesAllowed({"ROLE_ADMIN", "USER"})
     @PostMapping
-    public ResponseEntity<RatingDto> save(@RequestBody RatingRequest request){
+    @RolesAllowed({"ROLE_ADMIN, ROLE_USER"})
+    public ResponseEntity<RatingDto> create(@RequestBody @Valid RatingRequest request){
+        User user = userService.getAuthUser();
+        if(user == null)
+            throw new CustomException(HttpStatus.NOT_FOUND, "No se puede identificar al usuario");
+        request.setUserUuid(user.getUuid());
         RatingDto ratingDto = service.save(request);
         return ResponseEntity.ok(ratingDto);
     }
 
-    @PutMapping("/{entityUuid}")
-    @PreAuthorize("hasRole('USER') AND #username == authentication.principal.username")
-    public ResponseEntity<RatingDto> update(@PathVariable UUID entityUuid, @RequestBody RatingRequest request){
-        RatingDto ratingDto = service.update(entityUuid, request);
+    @PutMapping("/{uuid}")
+    @PreAuthorize("hasRole('ADMIN') OR hasRole('USER')")
+    public ResponseEntity<RatingDto> update(@PathVariable UUID uuid, @RequestBody @Valid RatingRequest request){
+        User user = userService.getAuthUser();
+        if(user == null)
+            throw new CustomException(HttpStatus.UNAUTHORIZED, "No se puede identificar al usuario");
+        request.setUserUuid(user.getUuid());
+        if(user.getUuid() != request.getUserUuid())
+            throw new CustomException(HttpStatus.UNAUTHORIZED, "No autorizado");
+        RatingDto ratingDto = service.update(uuid, request);
         return ResponseEntity.ok(ratingDto);
     }
 
-//    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    @PreAuthorize("hasRole('ADMIN') OR (hasRole('USER') AND #username == authentication.principal.username)")
+    @PreAuthorize("hasRole('ADMIN') OR hasRole('USER')")
     @DeleteMapping("{uuid}")
-    public ResponseEntity<?> deleteByUuid(@PathVariable UUID uuid){
-//        Validad de que el registro le pertenezca al usuario
-        service.deleteByUuid(uuid);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Boolean> deleteByUuid(@PathVariable UUID uuid){
+        User user = userService.getAuthUser();
+        if(user == null)
+            throw new CustomException(HttpStatus.UNAUTHORIZED, "No se puede identificar al usuario");
+        if(!containsRole(user.getRoles(), ERole.ROLE_ADMIN)
+                && !service.existsByUuidAndUserUsername(uuid, user.getUsername())
+        )
+                throw new CustomException(HttpStatus.UNAUTHORIZED, "No autorizado");
+        return ResponseEntity.ok(service.deleteByUuid(uuid));
     }
+
+    private boolean containsRole(Set<Role> roles, ERole eRole){
+        return roles.stream().filter(i -> i.getName() == eRole).limit(1).count() > 0;
+    }
+
 }

@@ -8,6 +8,8 @@ public interface BaseController <ID, ITEM, FORM, DTO>{
 
     ResponseEntity<Page<ITEM>> findAll(Pageable pageable, String filter);
 
+    ResponseEntity<Page<ITEM>> findAllPrivates(Pageable pageable, String filter);
+
     ResponseEntity<DTO> findById(ID id);
 
     ResponseEntity<DTO> create(FORM request);

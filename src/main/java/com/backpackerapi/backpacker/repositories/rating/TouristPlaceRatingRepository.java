@@ -6,13 +6,35 @@ import com.backpackerapi.backpacker.models.rating.TouristPlaceRating;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface TouristPlaceRatingRepository extends BaseRatingRepository<TouristPlaceRating>{
+
+    @Query(
+            value = """
+                SELECT CASE WHEN (COUNT(*) > 0) = TRUE THEN 'TRUE' ELSE 'FALSE' END
+                FROM tourist_places_rating tpr
+                JOIN users u ON u.uuid = tpr.user_id
+                WHERE tpr.entity_fk = :entityUuid AND tpr. = :username
+            """,
+            nativeQuery = true
+    )
+    @Override
+    boolean existsByEntityUuidAndUserUsername(UUID entityUuid, String username);
+
+    @Query(
+            value = """
+                SELECT CASE WHEN (COUNT(*) > 0) = TRUE THEN 'TRUE' ELSE 'FALSE' END
+                FROM tourist_places_rating tpr
+                WHERE tpr.entity_fk = :entityUuid AND tpr.user_uuid = :userUuid
+            """,
+            nativeQuery = true
+    )
+    @Override
+    boolean existsByEntityUuidAndUserUuid(@Param("entityUuid") UUID entityUuid, @Param("userUuid") UUID userUuid);
 
     @Query(
         value = """

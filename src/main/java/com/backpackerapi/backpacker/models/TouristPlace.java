@@ -2,6 +2,7 @@ package com.backpackerapi.backpacker.models;
 
 import com.backpackerapi.backpacker.models.file.TouristPlaceFile;
 import com.backpackerapi.backpacker.models.rating.TouristPlaceRating;
+import com.backpackerapi.backpacker.models.address.address.TPAddress;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -44,6 +45,9 @@ public class TouristPlace extends BaseModelX {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "entity")
     private List<TouristPlaceFile> files;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "entity")
+    private List<TPAddress> addresses;
 
     public boolean getIsPublic(){
         return isPublic;

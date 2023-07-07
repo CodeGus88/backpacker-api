@@ -8,7 +8,6 @@ import com.backpackerapi.backpacker.models.Category;
 import com.backpackerapi.backpacker.models.TouristPlace;
 import com.backpackerapi.backpacker.repositories.CategoryRepository;
 import com.backpackerapi.backpacker.repositories.TouristPlaceRepository;
-import com.backpackerapi.backpacker.services.storange.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,8 +36,8 @@ public class TouristPlaceServiceImpl implements TouristPlaceService {
     }
 
     @Override
-    public Page<ITouristPlaceItem> findAll(Pageable pageable, String filter) {
-        return repository.filterAllPublicPageable(pageable, filter);
+    public Page<ITouristPlaceItem> findAllByIsPublic(Pageable pageable, String filter, boolean isPublic) {
+        return repository.filterAllByIsPublicPageable(pageable, filter, isPublic);
     }
 
     @Transactional

@@ -8,7 +8,7 @@ public interface BaseService <ID, ITEM, FORM, DTO> {
 
     DTO findById(ID uuid);
 
-    Page<ITEM> findAll(Pageable pageable, String search);
+    Page<ITEM> findAllByIsPublic(Pageable pageable, String search, boolean isPublic);
 
     @Transactional
     DTO save(FORM request);

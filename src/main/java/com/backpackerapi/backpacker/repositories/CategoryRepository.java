@@ -8,8 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-//    @Query("SELECT c.id id, c.name name, c.description description FROM Category c")
-//    List<Category> findAll();
-
     boolean existsByName(String name);
+
 }

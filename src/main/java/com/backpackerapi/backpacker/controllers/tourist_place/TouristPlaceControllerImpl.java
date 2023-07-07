@@ -36,7 +36,14 @@ public class TouristPlaceControllerImpl implements TouristPlaceController, Image
     @GetMapping
     @Override
     public ResponseEntity<Page<ITouristPlaceItem>> findAll(Pageable pageable, String filter) {
-        Page<ITouristPlaceItem> list = touristPlaceService.findAll(pageable, filter);
+        Page<ITouristPlaceItem> list = touristPlaceService.findAllByIsPublic(pageable, filter, true);
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("privates")
+    @Override
+    public ResponseEntity<Page<ITouristPlaceItem>> findAllPrivates(Pageable pageable, String filter) {
+        Page<ITouristPlaceItem> list = touristPlaceService.findAllByIsPublic(pageable, filter, false);
         return ResponseEntity.ok(list);
     }
 

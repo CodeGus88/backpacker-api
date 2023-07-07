@@ -21,18 +21,18 @@ public interface TouristPlaceRepository extends JpaRepository<TouristPlace, UUID
 
     @Query(value = """
             SELECT tp.uuid, tp.name, tp.resume, tp.image_icon imageIcon, 
-            tp.created_at createdAt, ROUND(AVG(tpr.punctuation), 1) rating, 
+            tp.created_at createdAt, ROUND(AVG(COALESCE(tpr.punctuation, 0)), 1) rating, 
             STRING_AGG(DISTINCT cat.name, ',') categories
             FROM tourist_places tp
             LEFT JOIN tourist_places_rating tpr ON tpr.entity_fK = tp.uuid 
             LEFT JOIN tourist_places_categories joinTable ON joinTable.tourist_place_uuid = tp.uuid
             LEFT JOIN categories cat ON cat.id = joinTable.category_id 
-            WHERE tp.is_public = TRUE
+            WHERE tp.is_public = :isPublic
             AND (
                 LOWER(tp.name) LIKE LOWER(CONCAT('%', :filter, '%')) OR
-                LOWER(tp.keywords) LIKE LOWER(CONCAT('%', :filter, '%')) OR 
-                CONCAT(tp.uuid, '') LIKE '%:filter%' OR 
-                CONCAT(tp.created_at, '') LIKE '%:filter%' OR 
+                LOWER(tp.keywords) LIKE LOWER(CONCAT('%', :filter, '%')) OR
+                CONCAT(tp.uuid, '') LIKE CONCAT('%', :filter, '%') OR
+                CONCAT(tp.created_at, '') LIKE CONCAT('%', :filter, '%') OR
                 LOWER(cat.name) LIKE LOWER(CONCAT('%', :filter, '%'))
             )
             GROUP BY tp.uuid
@@ -42,12 +42,12 @@ public interface TouristPlaceRepository extends JpaRepository<TouristPlace, UUID
                     FROM tourist_places tp 
                     LEFT JOIN tourist_places_categories joinTable ON tp.uuid = tourist_place_uuid 
                     LEFT JOIN categories cat ON cat.id = joinTable.category_id 
-                    WHERE tp.is_public = TRUE 
+                    WHERE tp.is_public = :isPublic 
                     AND (
                         LOWER(tp.name) LIKE LOWER(CONCAT('%', :filter, '%')) OR 
                         LOWER(tp.keywords) LIKE LOWER(CONCAT('%', :filter, '%')) OR 
-                        CONCAT(tp.uuid, '') LIKE '%:filter%' OR 
-                        CONCAT(tp.created_at, '') LIKE '%:filter%' OR 
+                        CONCAT(tp.uuid, '') LIKE CONCAT('%', :filter, '%') OR 
+                        CONCAT(tp.created_at, '') LIKE CONCAT('%', :filter, '%') OR 
                         LOWER(cat.name) LIKE LOWER(CONCAT('%', :filter, '%'))
                     )
                     GROUP BY tp.uuid
@@ -55,9 +55,10 @@ public interface TouristPlaceRepository extends JpaRepository<TouristPlace, UUID
             nativeQuery = true,
             queryRewriter = TPQueryRewriter.class
     )
-    Page<ITouristPlaceItem> filterAllPublicPageable(
+    Page<ITouristPlaceItem> filterAllByIsPublicPageable(
             Pageable pageable,
-            @Param("filter") String filter
+            @Param("filter") String filter,
+            @Param("isPublic") boolean isPublic
     );
 
 }

@@ -8,6 +8,10 @@ import org.mapstruct.Mappings;
 
 public interface BaseRatingMapper<ENTITY> {
 
+    @Mappings({
+            @Mapping(source = "entityUuid", target = "entity.uuid"),
+            @Mapping(source = "userUuid", target = "user.uuid")
+    })
     ENTITY requestToEntity(RatingRequest request);
 
     @Mappings({

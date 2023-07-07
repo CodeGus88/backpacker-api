@@ -25,7 +25,15 @@ public class BaseRatingServiceImpl<ENTITY extends BaseRating, MAPPER extends Bas
     @Transactional
     @Override
     public RatingDto save(RatingRequest request) {
+        if(
+                repository.existsByEntityUuidAndUserUuid(
+                        request.getEntityUuid(),
+                        request.getUserUuid()
+                )
+        )
+            throw new CustomException(HttpStatus.ALREADY_REPORTED, "El usuario ya tiene registrado puntuación para este recurso");
         ENTITY entity = mapper.requestToEntity(request);
+        entity.setUuid(UUID.randomUUID());
         entity.setCreatedAt(LocalDateTime.now());
         ENTITY savedEntity = repository.save(entity);
         return mapper.entityToRatingDto(savedEntity);
@@ -35,15 +43,15 @@ public class BaseRatingServiceImpl<ENTITY extends BaseRating, MAPPER extends Bas
     @Override
     public RatingDto update(UUID uuid, RatingRequest request) {
         if(repository.existsById(uuid)){
-            ENTITY old = repository.findById(uuid).get();
+            ENTITY oldEntity = repository.findById(uuid).get();
             ENTITY entity = mapper.requestToEntity(request);
             entity.setUuid(uuid);
-            entity.setCreatedAt(old.getCreatedAt());
-            entity.setUser(old.getUser());
+            entity.setCreatedAt(oldEntity.getCreatedAt());
+            entity.setUser(oldEntity.getUser());
             ENTITY savedEntity = repository.save(entity);
             return mapper.entityToRatingDto(savedEntity);
         } else {
-             throw new CustomException(HttpStatus.NOT_FOUND, "No se encontró el recurso");
+             throw new CustomException(HttpStatus.NOT_FOUND, "El recurso no existe");
         }
     }
 
@@ -74,8 +82,18 @@ public class BaseRatingServiceImpl<ENTITY extends BaseRating, MAPPER extends Bas
     @Override
     public boolean deleteByUuid(UUID uuid) {
         if(!repository.existsById(uuid))
-            throw new CustomException(HttpStatus.NOT_FOUND, "No se encontró el recurso");
+            throw new CustomException(HttpStatus.NOT_FOUND, "El recurso no existe");
         repository.deleteById(uuid);
         return true;
+    }
+
+    @Override
+    public boolean existsByUuidAndUserUsername(UUID uuid, String username) {
+        return repository.existsByUuidAndUserUsername(uuid, username);
+    }
+
+    @Override
+    public boolean existsByEntityUuidAndUserUsername(UUID entityUuid, String username) {
+        return repository.existsByEntityUuidAndUserUsername(entityUuid, username);
     }
 }

@@ -15,6 +15,12 @@ import java.util.UUID;
 @MappedSuperclass
 public interface BaseRatingRepository<E> extends JpaRepository<E, UUID> {
 
+    boolean existsByUuidAndUserUsername(UUID uuid, String username);
+
+    boolean existsByEntityUuidAndUserUsername(UUID entityUuid, String username);
+
+    boolean existsByEntityUuidAndUserUuid(UUID entityUuid, UUID userUuid);
+
     IEntityRatingDto calculatePunctuation(UUID entityUuid);
 
     List<IRatingItem> findLastByEntityUuid(UUID entityUuid, long limit);

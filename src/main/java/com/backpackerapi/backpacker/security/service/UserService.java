@@ -42,29 +42,29 @@ public class UserService {
     @Autowired
     JwtProvider jwtProvider;
 
-    public Optional<User> getByNombreUsuario(String nombreUsuario){
-        return userRepository.findByUsername(nombreUsuario);
+    public Optional<User> getByUsername(String username){
+        return userRepository.findByUsername(username);
     }
 
-    public Optional<User> getByNombreUsuarioOrEmail(String nombreOrEmail){
-        return userRepository.findByUsernameOrEmail(nombreOrEmail, nombreOrEmail);
+    public Optional<User> getByUsernameOrEmail(String usernameOrEmail){
+        return userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
     }
 
     public Optional<User> getByTokenPassword(String tokenPassword){
         return userRepository.findByTokenPassword(tokenPassword);
     }
 
-    public boolean existsByNombreUsuario(String nombreUsuario){
-        return userRepository.existsByUsername(nombreUsuario);
+    public boolean existsByUsername(String username){
+        return userRepository.existsByUsername(username);
     }
 
     public boolean existsByEmail(String email){
         return userRepository.existsByEmail(email);
     }
 
-    public JwtDto login(UserLogin loginUsuario){
+    public JwtDto login(UserLogin userLogin){
         Authentication authentication =
-                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUsuario.getUsername(), loginUsuario.getPassword()));
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLogin.getUsername(), userLogin.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtProvider.generateToken(authentication);
         return new JwtDto(jwt);
