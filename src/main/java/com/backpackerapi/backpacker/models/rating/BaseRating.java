@@ -11,8 +11,9 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 public class BaseRating<E> extends BaseModel {
 
-    private byte punctuation;
+    private float punctuation;
 
+    @Column(length = 255)
     private String comment;
 
     @ManyToOne

@@ -20,11 +20,13 @@ public interface BaseAddressService
     List<M> findAllByEntityUuid(UUID entityUuid);
 
     @Transactional
-    AddressDto save(AddressRequest request);
+    AddressDto create(AddressRequest request);
 
     @Transactional
     AddressDto update(UUID uuid, AddressRequest request);
 
     void deleteByUuid(UUID uuid);
+
+    boolean existsByUuid(UUID uuid);
 
 }

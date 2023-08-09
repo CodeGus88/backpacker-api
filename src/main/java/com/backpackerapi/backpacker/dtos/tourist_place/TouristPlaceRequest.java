@@ -1,6 +1,5 @@
 package com.backpackerapi.backpacker.dtos.tourist_place;
 
-import com.backpackerapi.backpacker.dtos.category.CategoryForRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -24,23 +23,23 @@ public class TouristPlaceRequest {
     private boolean isPublic;
 
     @NotBlank
-    @Size(min = 1, max = 500)
+    @Size(min = 10, max = 500)
     private String resume;
 
     @NotBlank
     @Size(min = 1, max = 50)
     private String keywords;
     @NotBlank
-    @Size(min = 1, max = 10000)
+    @Size(min = 10, max = 10000)
     private String description;
 
-    private Set<CategoryForRequest> categories;
+    private Set<Long> categories;
 
     public TouristPlaceRequest(
             String name,
             String imageIcon,
             boolean isPublic,
-            Set<CategoryForRequest> categories,
+            Set<Long> categories,
             String resume,
             String keywords,
             String description

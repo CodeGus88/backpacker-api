@@ -5,6 +5,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.util.UUID;
@@ -13,9 +14,11 @@ import java.util.UUID;
 public class AddressRequest {
 
     @NotBlank
+    @Size(max = 30)
     private String title;
 
-    @Column(nullable = false, length = 250)
+    @NotBlank
+    @Size(max = 100)
     private String address;
 
     private String continent;

@@ -8,8 +8,8 @@ public interface IRatingItem {
     void setUuid(UUID uuid);
     UUID getUuid();
 
-    void setPunctuation(byte punctuation);
-    byte getPunctuation();
+    void setPunctuation(float punctuation);
+    float getPunctuation();
 
     void setComment(String comment);
     String getComment();

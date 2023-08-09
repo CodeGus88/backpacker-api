@@ -32,6 +32,7 @@ public class TouristPlace extends BaseModelX {
     @Column(name = "description", nullable = false, length = 10000)
     private String description;
 
+    @OrderBy("name ASC")
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
         name = "tourist_places_categories",
@@ -43,9 +44,10 @@ public class TouristPlace extends BaseModelX {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "entity")
     private Set<TouristPlaceRating> rating;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "entity")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "entity")
     private List<TouristPlaceFile> files;
 
+    @OrderBy("title ASC")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "entity")
     private List<TPAddress> addresses;
 

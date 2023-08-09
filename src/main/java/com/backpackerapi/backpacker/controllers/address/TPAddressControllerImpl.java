@@ -4,16 +4,14 @@ import com.backpackerapi.backpacker.dtos.address.AddressDto;
 import com.backpackerapi.backpacker.dtos.address.AddressRequest;
 import com.backpackerapi.backpacker.models.address.address.TPAddress;
 import com.backpackerapi.backpacker.services.address.TPAddressService;
-import com.backpackerapi.backpacker.services.tourist_place.TouristPlaceService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.UUID;
 
-@RestController("api/tp-addresses")
+@RequestMapping("api/tp-addresses")
+@RestController
 @CrossOrigin
 public class TPAddressControllerImpl extends BaseAddressControllerImpl<TPAddress, TPAddressService>
 implements TPAddressController {
@@ -21,8 +19,8 @@ implements TPAddressController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     @Override
-    public ResponseEntity<AddressDto> save(@RequestBody @Valid AddressRequest address) {
-        return super.save(address);
+    public ResponseEntity<AddressDto> create(@RequestBody @Valid AddressRequest address) {
+        return super.create(address);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -35,7 +33,7 @@ implements TPAddressController {
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("{uuid}")
     @Override
-    public ResponseEntity deleteByUuid(@PathVariable UUID uuid) {
+    public ResponseEntity<Void> deleteByUuid(@PathVariable UUID uuid) {
         return super.deleteByUuid(uuid);
     }
 }

@@ -4,12 +4,12 @@ import com.backpackerapi.backpacker.dtos.category.CategoryDto;
 import com.backpackerapi.backpacker.models.Category;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Set;
+import java.util.List;
 
 public interface CategoryController {
 
-    ResponseEntity<Set<CategoryDto>> findAll();
+    ResponseEntity<List<CategoryDto>> findAll();
 
-    ResponseEntity<Category> findBiId(long id);
+    ResponseEntity<Category> findBYId(long id);
 
 }

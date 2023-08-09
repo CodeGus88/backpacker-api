@@ -38,7 +38,7 @@ public interface TouristPlaceRatingRepository extends BaseRatingRepository<Touri
 
     @Query(
         value = """
-                SELECT tp.uuid entityUuid, COUNT(*) population, ROUND(AVG(r.punctuation), 2) punctuation
+                SELECT tp.uuid entityUuid, COUNT(*) population, ROUND(CAST(AVG(r.punctuation) AS NUMERIC), 2) punctuation
                 FROM tourist_places_rating r
                 JOIN tourist_places tp ON tp.uuid = r.entity_fk
                 WHERE tp.uuid = :entityUuid
@@ -48,6 +48,8 @@ public interface TouristPlaceRatingRepository extends BaseRatingRepository<Touri
     )
     @Override
     IEntityRatingDto calculatePunctuation(@Param("entityUuid") UUID entityUuid);
+
+
 
     @Query(
             value = """

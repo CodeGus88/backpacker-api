@@ -7,7 +7,7 @@ import com.backpackerapi.backpacker.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,8 +20,8 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryMapper mapper;
 
     @Override
-    public Set<CategoryDto> findAll() {
-        return repository.findAll().stream().map(e -> mapper.entityToDto(e)).collect(Collectors.toSet());
+    public List<CategoryDto> findAll() {
+        return repository.findAllByOrderByNameAsc().stream().map(e -> mapper.entityToDto(e)).collect(Collectors.toList());
     }
 
     @Override

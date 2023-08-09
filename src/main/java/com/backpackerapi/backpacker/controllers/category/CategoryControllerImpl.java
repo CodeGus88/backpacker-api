@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -19,13 +19,13 @@ public class CategoryControllerImpl implements CategoryController{
 
     @GetMapping
     @Override
-    public ResponseEntity<Set<CategoryDto>> findAll() {
+    public ResponseEntity<List<CategoryDto>> findAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
     @GetMapping("{id}")
     @Override
-    public ResponseEntity<Category> findBiId(@PathVariable long id) {
+    public ResponseEntity<Category> findBYId(@PathVariable long id) {
         Category category = service.findById(id);
         if(category == null)
             return ResponseEntity.notFound().build();

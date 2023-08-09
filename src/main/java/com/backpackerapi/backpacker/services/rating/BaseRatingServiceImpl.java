@@ -1,10 +1,12 @@
 package com.backpackerapi.backpacker.services.rating;
 
 import com.backpackerapi.backpacker.dtos.rating.*;
+import com.backpackerapi.backpacker.enums.EEntity;
 import com.backpackerapi.backpacker.exceptions.CustomException;
 import com.backpackerapi.backpacker.mappers.rating.BaseRatingMapper;
 import com.backpackerapi.backpacker.models.rating.BaseRating;
 import com.backpackerapi.backpacker.repositories.rating.BaseRatingRepository;
+import com.backpackerapi.backpacker.repositories.rating.RatingCommonQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,23 +22,26 @@ public class BaseRatingServiceImpl<ENTITY extends BaseRating, MAPPER extends Bas
     private REPOSITORY repository;
 
     @Autowired
+    private RatingCommonQuery q;
+
+    @Autowired
     private MAPPER mapper;
 
     @Transactional
     @Override
-    public RatingDto save(RatingRequest request) {
+    public RatingItem save(RatingRequest request) {
         if(
                 repository.existsByEntityUuidAndUserUuid(
                         request.getEntityUuid(),
                         request.getUserUuid()
                 )
         )
-            throw new CustomException(HttpStatus.ALREADY_REPORTED, "El usuario ya tiene registrado puntuación para este recurso");
+            throw new CustomException(HttpStatus.CONFLICT, "El usuario ya tiene registrado puntuación para este recurso");
         ENTITY entity = mapper.requestToEntity(request);
         entity.setUuid(UUID.randomUUID());
         entity.setCreatedAt(LocalDateTime.now());
         ENTITY savedEntity = repository.save(entity);
-        return mapper.entityToRatingDto(savedEntity);
+        return mapper.entityToRatingItem(savedEntity);
     }
 
     @Transactional
@@ -95,5 +100,10 @@ public class BaseRatingServiceImpl<ENTITY extends BaseRating, MAPPER extends Bas
     @Override
     public boolean existsByEntityUuidAndUserUsername(UUID entityUuid, String username) {
         return repository.existsByEntityUuidAndUserUsername(entityUuid, username);
+    }
+
+    @Override
+    public SimplePunctuationDto punctuationByEntityUuid(EEntity eEntity, UUID entityUuid) {
+        return q.punctuationByEntityUuid(eEntity, entityUuid);
     }
 }

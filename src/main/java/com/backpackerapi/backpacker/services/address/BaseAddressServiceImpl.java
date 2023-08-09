@@ -32,7 +32,7 @@ public class BaseAddressServiceImpl<
     }
 
     @Override
-    public AddressDto save(AddressRequest request) {
+    public AddressDto create(AddressRequest request) {
         M m = mapper.requestToModel(request);
         m.setUuid(UUID.randomUUID());
         AddressDto addressDto = mapper.entityToDto(
@@ -44,7 +44,7 @@ public class BaseAddressServiceImpl<
     @Override
     public AddressDto update(UUID uuid, AddressRequest request) {
         if(!repository.existsById(uuid))
-            throw new CustomException(HttpStatus.NOT_FOUND, "No sen encontró el recurso");
+            throw new CustomException(HttpStatus.NOT_FOUND, "No se encontró el recurso");
         M m = mapper.requestToModel(request);
         m.setUuid(uuid);
         AddressDto addressDto = mapper.entityToDto(
@@ -56,7 +56,12 @@ public class BaseAddressServiceImpl<
     @Override
     public void deleteByUuid(UUID uuid) {
         if(!repository.existsById(uuid))
-            throw new CustomException(HttpStatus.NOT_FOUND, "No sen encontró el recurso");
+            throw new CustomException(HttpStatus.NOT_FOUND, "No se encontró el recurso");
         repository.deleteById(uuid);
+    }
+
+    @Override
+    public boolean existsByUuid(UUID uuid) {
+        return repository.existsById(uuid);
     }
 }

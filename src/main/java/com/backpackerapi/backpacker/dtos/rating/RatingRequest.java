@@ -2,17 +2,17 @@ package com.backpackerapi.backpacker.dtos.rating;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
-import org.hibernate.validator.constraints.Range;
 
 import java.util.UUID;
 
 @Data
 public class RatingRequest {
 
-    @Range(min = 1, max = 5)
-    private byte punctuation;
+    @DecimalMin(value = "0.5", inclusive = true)
+    @DecimalMax(value = "5.0", inclusive = true)
+    private float punctuation;
 
-    @NotBlank
+    @Size(max = 255)
     private String comment;
 
     @NotNull

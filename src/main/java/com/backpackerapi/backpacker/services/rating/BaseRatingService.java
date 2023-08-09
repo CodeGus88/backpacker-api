@@ -1,11 +1,8 @@
 package com.backpackerapi.backpacker.services.rating;
 
-import com.backpackerapi.backpacker.dtos.rating.IEntityRatingDto;
-import com.backpackerapi.backpacker.dtos.rating.IRatingItem;
-import com.backpackerapi.backpacker.dtos.rating.RatingDto;
-import com.backpackerapi.backpacker.dtos.rating.RatingRequest;
+import com.backpackerapi.backpacker.dtos.rating.*;
+import com.backpackerapi.backpacker.enums.EEntity;
 import com.backpackerapi.backpacker.mappers.rating.BaseRatingMapper;
-import com.backpackerapi.backpacker.models.BaseModel;
 import com.backpackerapi.backpacker.repositories.rating.BaseRatingRepository;
 
 import java.util.UUID;
@@ -16,13 +13,15 @@ public interface BaseRatingService<
         REPOSITORY extends BaseRatingRepository<ENTITY>
     > {
 
-    RatingDto save(RatingRequest request);
+    RatingItem save(RatingRequest request);
 
     RatingDto update(UUID entityUuid, RatingRequest request);
 
     IEntityRatingDto findLastByEntityUuid(UUID entityUuid, long limit);
 
     IRatingItem findByEntityUuidAndUserUuid(UUID entityUuid, UUID userUuid);
+
+    SimplePunctuationDto punctuationByEntityUuid(EEntity eEntity, UUID entityUuid);
 
     boolean deleteByUuid(UUID uuid);
 

@@ -5,7 +5,7 @@ import com.backpackerapi.backpacker.repositories.rating.TouristPlaceRatingReposi
 import org.springframework.stereotype.Service;
 
 @Service
-public class TouristPlaceRatingServiceImpl extends BaseRatingServiceImpl<
+public class TPRatingServiceImpl extends BaseRatingServiceImpl<
         TouristPlaceRating, TouristPlaceRatingMapper, TouristPlaceRatingRepository> implements TouristPlaceRatingService{
 
 

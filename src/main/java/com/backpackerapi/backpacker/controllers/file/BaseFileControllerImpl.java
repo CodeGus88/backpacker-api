@@ -13,12 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 
 public class BaseFileControllerImpl
         <
@@ -47,7 +45,7 @@ public class BaseFileControllerImpl
         return ResponseEntity.ok().body(service.save(request));
     }
 
-    @GetMapping("find-all-by-entity-uuid/{entityUuid}")
+    @GetMapping("find-by-entity-uuid/{entityUuid}")
     @Override
     public ResponseEntity<List<FileDto>> findByEntityUuid(@PathVariable UUID entityUuid) {
         return ResponseEntity.ok(service.findByEntityUuid(entityUuid));
@@ -71,7 +69,7 @@ public class BaseFileControllerImpl
     }
 
     @Override
-    public ResponseEntity<Boolean> deleteByUuid(EModule eModule, UUID fileUuid) {
+    public ResponseEntity<Void> deleteByUuid(EModule eModule, UUID fileUuid) {
 //      cargar recurso
         FileDto file = service.findById(fileUuid);
 //        Eliminar el archivo
@@ -79,8 +77,11 @@ public class BaseFileControllerImpl
             return ResponseEntity.notFound().build();
         boolean isDeleted = storageService.deleteFile(eModule, file.getEntityUuid(), file.getFile());
 //        Eliminar de la base de datos
-        if(isDeleted)
-            return ResponseEntity.ok(service.deleteByUuid(fileUuid));
+        if(isDeleted){
+            service.deleteByUuid(fileUuid);
+            if(!service.existByUuid(fileUuid))
+                return ResponseEntity.noContent().build();
+        }
         return ResponseEntity.notFound().build();
     }
 

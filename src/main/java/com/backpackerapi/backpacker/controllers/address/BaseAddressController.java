@@ -12,10 +12,10 @@ public interface BaseAddressController<M, S extends BaseAddressService> {
 
     ResponseEntity<List<AddressDto>> findAllByEntityUuid(UUID entityUuid);
 
-    ResponseEntity<AddressDto> save(AddressRequest request);
+    ResponseEntity<AddressDto> create(AddressRequest request);
 
     ResponseEntity<AddressDto> update(UUID uuid, AddressRequest request);
 
-    ResponseEntity deleteByUuid(UUID uuid);
+    ResponseEntity<Void> deleteByUuid(UUID uuid);
 
 }

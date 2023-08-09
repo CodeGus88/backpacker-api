@@ -2,7 +2,6 @@ package com.backpackerapi.backpacker.dtos.tourist_place;
 
 import com.backpackerapi.backpacker.dtos.address.AddressDto;
 import com.backpackerapi.backpacker.dtos.category.CategoryDto;
-import com.backpackerapi.backpacker.dtos.files.FileDto;
 import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -21,7 +20,7 @@ public class TouristPlaceDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Set<CategoryDto> categories;
-    private Set<FileDto> files;
+//    private Set<FileDto> files;
     private Set<AddressDto> addresses;
 
     public boolean getIsPublic(){

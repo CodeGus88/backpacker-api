@@ -35,5 +35,5 @@ public interface BaseFileController<
 
     ResponseEntity<Resource> getFileFromDefaultDir(String fileName);
 
-    ResponseEntity<Boolean> deleteByUuid(EModule eModule, UUID fileUuid);
+    ResponseEntity<Void> deleteByUuid(EModule eModule, UUID fileUuid);
 }

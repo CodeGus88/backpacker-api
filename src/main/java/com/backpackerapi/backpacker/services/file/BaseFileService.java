@@ -15,6 +15,8 @@ public interface BaseFileService<E extends BaseFile> {
 
     FileDto findById(UUID uuid);
 
-    boolean deleteByUuid(UUID uuid);
+    void deleteByUuid(UUID uuid);
+
+    boolean existByUuid(UUID uuid);
 
 }

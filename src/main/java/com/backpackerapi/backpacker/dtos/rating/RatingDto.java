@@ -9,7 +9,7 @@ import java.util.UUID;
 public class RatingDto {
 
     private UUID uuid;
-    private byte punctuation;
+    private float punctuation;
     private String comment;
     private UUID entityUuid;
     private UUID userUuid;

@@ -13,10 +13,14 @@ import org.mapstruct.Mappings;
 public interface TouristPlaceMapper {
 
     @Mappings({
-            @Mapping(target = "uuid", ignore = true)
+            @Mapping(target = "uuid", ignore = true),
+            @Mapping(target = "categories", ignore = true)
     })
     TouristPlace requestToEntity(TouristPlaceRequest touristPlaceRequest);
 
+    @Mappings({
+            @Mapping(target = "categories", ignore = true)
+    })
     TouristPlaceRequest dtoToRequest(TouristPlaceDto touristPlaceDto);
 
     TouristPlaceDto entityToDto(TouristPlace entity);

@@ -21,7 +21,7 @@ public interface TouristPlaceRepository extends JpaRepository<TouristPlace, UUID
 
     @Query(value = """
             SELECT tp.uuid, tp.name, tp.resume, tp.image_icon imageIcon, 
-            tp.created_at createdAt, ROUND(AVG(COALESCE(tpr.punctuation, 0)), 1) rating, 
+            tp.created_at createdAt, ROUND(CAST(AVG(COALESCE(tpr.punctuation, 0)) AS NUMERIC), 1) rating, 
             STRING_AGG(DISTINCT cat.name, ',') categories
             FROM tourist_places tp
             LEFT JOIN tourist_places_rating tpr ON tpr.entity_fK = tp.uuid 

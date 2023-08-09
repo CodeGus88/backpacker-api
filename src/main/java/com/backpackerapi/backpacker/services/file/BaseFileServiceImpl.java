@@ -53,8 +53,12 @@ public class BaseFileServiceImpl
 
     @Transactional
     @Override
-    public boolean deleteByUuid(UUID uuid) {
+    public void deleteByUuid(UUID uuid) {
         repository.deleteById(uuid);
-        return true;
+    }
+
+    @Override
+    public boolean existByUuid(UUID uuid) {
+        return repository.existsById(uuid);
     }
 }

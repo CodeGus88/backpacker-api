@@ -29,8 +29,8 @@ public class BaseAddressControllerImpl<
     }
 
     @Override
-    public ResponseEntity<AddressDto> save(AddressRequest address) {
-        return ResponseEntity.ok(service.save(address));
+    public ResponseEntity<AddressDto> create(AddressRequest address) {
+        return ResponseEntity.ok(service.create(address));
     }
 
     @Override
@@ -39,8 +39,11 @@ public class BaseAddressControllerImpl<
     }
 
     @Override
-    public ResponseEntity deleteByUuid(UUID uuid) {
+    public ResponseEntity<Void> deleteByUuid(UUID uuid) {
         service.deleteByUuid(uuid);
-        return ResponseEntity.ok().build();
+        if(!service.existsByUuid(uuid))
+            return ResponseEntity.noContent().build();
+        else
+            return ResponseEntity.internalServerError().build();
     }
 }

@@ -10,10 +10,8 @@ public class AddressDto {
 
     private UUID uuid;
 
-    @NotBlank
     private String title;
 
-    @Column(nullable = false, length = 250)
     private String address;
 
     private String continent;

@@ -8,11 +8,10 @@ import com.backpackerapi.backpacker.models.file.TouristPlaceFile;
 import com.backpackerapi.backpacker.services.file.tourist_placce_file.TouristPlaceFileService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.UUID;
-
 
 @RestController
 @RequestMapping("api/media/tourist-place-files")
@@ -21,7 +20,8 @@ public class TouristPlaceFileControllerImpl
         extends BaseFileControllerImpl<TouristPlaceFileService, TouristPlaceFile>
         implements TouristPlaceFileController{
 
-    @PostMapping("upload")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping
     public ResponseEntity<FileDto> uploadFile(
             @RequestParam("parentUuid") UUID parentUuid,
             @RequestParam("file") MultipartFile file
@@ -39,8 +39,9 @@ public class TouristPlaceFileControllerImpl
         return super.getResource(EModule.TOURIST_PLACES, parentModuleUuid, fileName);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("{fileUuid}")
-    public ResponseEntity<Boolean> deleteByUuid(@PathVariable UUID fileUuid) {
+    public ResponseEntity<Void> deleteByUuid(@PathVariable UUID fileUuid) {
         return super.deleteByUuid(EModule.TOURIST_PLACES, fileUuid);
     }
 }

@@ -47,7 +47,7 @@ public class TouristPlaceServiceImpl implements TouristPlaceService {
         touristPlace.setCreatedAt(LocalDateTime.now());
         List<Category> categories = new ArrayList<>();
         touristPlaceRequest.getCategories().forEach(i -> {
-            Optional<Category> o = catRepository.findById(i.getId());
+            Optional<Category> o = catRepository.findById(i);
             if(o.isPresent())
                 categories.add(o.get());
         });
@@ -69,13 +69,15 @@ public class TouristPlaceServiceImpl implements TouristPlaceService {
             entity.setKeywords(request.getKeywords());
             entity.setDescription(request.getDescription());
             entity.setUpdatedAt(LocalDateTime.now());
-            List<Category> categories = new ArrayList<>();
-            request.getCategories().forEach(i -> {
-                Optional<Category> o = catRepository.findById(i.getId());
-                if(o.isPresent())
-                    categories.add(o.get());
-            });
-            entity.setCategories(categories);
+            if(request.getCategories() != null){
+                List<Category> categories = new ArrayList<>();
+                request.getCategories().forEach(i -> {
+                    Optional<Category> o = catRepository.findById(i);
+                    if(o.isPresent())
+                        categories.add(o.get());
+                });
+                entity.setCategories(categories);
+            }
             dto = mapper.entityToDto(
                     repository.save(entity)
             );

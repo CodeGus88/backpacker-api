@@ -1,6 +1,7 @@
 package com.backpackerapi.backpacker.models.address;
 
 import com.backpackerapi.backpacker.models.BaseModel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
@@ -11,10 +12,10 @@ import lombok.Data;
 @MappedSuperclass
 public class BaseAddress<E extends BaseModel> extends BaseModel {
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 30)
     private String title;
 
-    @Column(nullable = false, length = 250)
+    @Column(nullable = false, length = 100)
     private String address;
 
     @Column(length = 30)
@@ -35,6 +36,7 @@ public class BaseAddress<E extends BaseModel> extends BaseModel {
     @Column(nullable = false)
     private double lng;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private E entity;
 

@@ -1,9 +1,7 @@
 package com.backpackerapi.backpacker.controllers.rating;
 
-import com.backpackerapi.backpacker.dtos.rating.IEntityRatingDto;
-import com.backpackerapi.backpacker.dtos.rating.IRatingItem;
-import com.backpackerapi.backpacker.dtos.rating.RatingDto;
-import com.backpackerapi.backpacker.dtos.rating.RatingRequest;
+import com.backpackerapi.backpacker.dtos.rating.*;
+import com.backpackerapi.backpacker.enums.EEntity;
 import com.backpackerapi.backpacker.exceptions.CustomException;
 import com.backpackerapi.backpacker.security.entity.Role;
 import com.backpackerapi.backpacker.security.entity.User;
@@ -52,13 +50,13 @@ public class BaseRatingController<S extends BaseRatingService> {
 
     @PostMapping
     @RolesAllowed({"ROLE_ADMIN, ROLE_USER"})
-    public ResponseEntity<RatingDto> create(@RequestBody @Valid RatingRequest request){
+    public ResponseEntity<RatingItem> create(@RequestBody @Valid RatingRequest request){
         User user = userService.getAuthUser();
         if(user == null)
             throw new CustomException(HttpStatus.NOT_FOUND, "No se puede identificar al usuario");
         request.setUserUuid(user.getUuid());
-        RatingDto ratingDto = service.save(request);
-        return ResponseEntity.ok(ratingDto);
+        RatingItem ratingItem = service.save(request);
+        return ResponseEntity.ok(ratingItem);
     }
 
     @PutMapping("/{uuid}")
@@ -89,6 +87,10 @@ public class BaseRatingController<S extends BaseRatingService> {
 
     private boolean containsRole(Set<Role> roles, ERole eRole){
         return roles.stream().filter(i -> i.getName() == eRole).limit(1).count() > 0;
+    }
+
+    public SimplePunctuationDto punctuationByEntityUuid(EEntity eEntity, UUID entityUud){
+        return service.punctuationByEntityUuid(eEntity, entityUud);
     }
 
 }

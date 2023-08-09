@@ -11,7 +11,7 @@ public class RatingItem implements IRatingItem{
 
     private UUID uuid;
 
-    private byte punctuation;
+    private float punctuation;
 
     private String comment;
 
