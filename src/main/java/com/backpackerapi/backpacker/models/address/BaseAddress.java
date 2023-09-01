@@ -11,6 +11,7 @@ import lombok.Data;
 @Data
 @MappedSuperclass
 public class BaseAddress<E extends BaseModel> extends BaseModel {
+//public class BaseAddress<E> extends BaseModel {
 
     @Column(nullable = false, length = 30)
     private String title;

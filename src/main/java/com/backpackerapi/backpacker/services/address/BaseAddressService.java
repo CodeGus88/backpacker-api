@@ -29,4 +29,6 @@ public interface BaseAddressService
 
     boolean existsByUuid(UUID uuid);
 
+    M findById(UUID uuid);
+
 }

@@ -1,6 +1,6 @@
 package com.backpackerapi.backpacker.dtos.tourist_place;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 
@@ -12,9 +12,9 @@ public class TouristPlaceItem implements ITouristPlaceItem {
     private String resume;
     private String categories;
     private Float rating;
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
-    public TouristPlaceItem(UUID uuid, String name, String imageIcon, String resume, String categories, LocalDateTime createdAt) {
+    public TouristPlaceItem(UUID uuid, String name, String imageIcon, String resume, String categories, Instant createdAt) {
         this.uuid = uuid;
         this.name = name;
         this.imageIcon = imageIcon;
@@ -86,12 +86,12 @@ public class TouristPlaceItem implements ITouristPlaceItem {
     }
 
     @Override
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
     @Override
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 

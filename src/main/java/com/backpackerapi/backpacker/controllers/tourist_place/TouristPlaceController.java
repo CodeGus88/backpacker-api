@@ -8,5 +8,4 @@ import java.util.UUID;
 
 public interface TouristPlaceController extends BaseController<UUID, ITouristPlaceItem, TouristPlaceRequest, TouristPlaceDto> {
 
-
 }

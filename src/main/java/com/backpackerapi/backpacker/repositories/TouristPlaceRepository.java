@@ -1,7 +1,7 @@
 package com.backpackerapi.backpacker.repositories;
 
 import com.backpackerapi.backpacker.dtos.tourist_place.ITouristPlaceItem;
-import com.backpackerapi.backpacker.models.TouristPlace;
+import com.backpackerapi.backpacker.models.principal_models.TouristPlace;
 import com.backpackerapi.backpacker.repositories.query_rewriter.TPQueryRewriter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +24,7 @@ public interface TouristPlaceRepository extends JpaRepository<TouristPlace, UUID
             tp.created_at createdAt, ROUND(CAST(AVG(COALESCE(tpr.punctuation, 0)) AS NUMERIC), 1) rating, 
             STRING_AGG(DISTINCT cat.name, ',') categories
             FROM tourist_places tp
-            LEFT JOIN tourist_places_rating tpr ON tpr.entity_fK = tp.uuid 
+            LEFT JOIN tourist_place_rating tpr ON tpr.entity_fK = tp.uuid 
             LEFT JOIN tourist_places_categories joinTable ON joinTable.tourist_place_uuid = tp.uuid
             LEFT JOIN categories cat ON cat.id = joinTable.category_id 
             WHERE tp.is_public = :isPublic

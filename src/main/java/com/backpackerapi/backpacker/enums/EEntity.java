@@ -1,6 +1,6 @@
 package com.backpackerapi.backpacker.enums;
 
 public enum EEntity {
-    TOURIST_PLACE_FILES,
-    TOURIST_PLACES_RATING
+    TOURIST_PLACE_IMAGE,
+    TOURIST_PLACE_RATING
 }

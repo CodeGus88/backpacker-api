@@ -20,7 +20,7 @@ public class BaseAddressControllerImpl<
         implements BaseAddressController<M, S>{
 
     @Autowired
-    private S service;
+    protected S service;
 
     @GetMapping("{entityUuid}")
     @Override

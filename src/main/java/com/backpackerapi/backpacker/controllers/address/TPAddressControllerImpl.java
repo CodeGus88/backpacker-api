@@ -2,8 +2,8 @@ package com.backpackerapi.backpacker.controllers.address;
 
 import com.backpackerapi.backpacker.dtos.address.AddressDto;
 import com.backpackerapi.backpacker.dtos.address.AddressRequest;
-import com.backpackerapi.backpacker.models.address.address.TPAddress;
-import com.backpackerapi.backpacker.services.address.TPAddressService;
+import com.backpackerapi.backpacker.models.address.TouristPlaceAddress;
+import com.backpackerapi.backpacker.services.address.application.TPAddressService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,7 +13,7 @@ import java.util.UUID;
 @RequestMapping("api/tp-addresses")
 @RestController
 @CrossOrigin
-public class TPAddressControllerImpl extends BaseAddressControllerImpl<TPAddress, TPAddressService>
+public class TPAddressControllerImpl extends BaseAddressControllerImpl<TouristPlaceAddress, TPAddressService>
 implements TPAddressController {
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -34,6 +34,8 @@ implements TPAddressController {
     @DeleteMapping("{uuid}")
     @Override
     public ResponseEntity<Void> deleteByUuid(@PathVariable UUID uuid) {
+        if(!service.existsByUuid(uuid))
+            return ResponseEntity.notFound().build();
         return super.deleteByUuid(uuid);
     }
 }

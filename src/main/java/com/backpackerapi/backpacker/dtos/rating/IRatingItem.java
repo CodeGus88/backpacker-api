@@ -1,6 +1,6 @@
 package com.backpackerapi.backpacker.dtos.rating;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 public interface IRatingItem {
@@ -17,7 +17,7 @@ public interface IRatingItem {
     void setUserUuid(UUID userUuid);
     UUID getUserUuid();
 
-    void setName(String username);
+    void setName(String name);
     String getName();
 
     void setUsername(String username);
@@ -26,7 +26,7 @@ public interface IRatingItem {
     void setEmail(String email);
     String getEmail();
 
-    void setCreatedAt(LocalDateTime date);
-    LocalDateTime getCreatedAt();
+    void setCreatedAt(Instant createdAt);
+    Instant getCreatedAt();
 
 }

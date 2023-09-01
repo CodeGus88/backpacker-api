@@ -1,6 +1,6 @@
 package com.backpackerapi.backpacker.dtos.tourist_place;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 public interface ITouristPlaceItem {
@@ -29,7 +29,7 @@ public interface ITouristPlaceItem {
 
     void setRating(Float rating);
 
-    LocalDateTime getCreatedAt();
+    Instant getCreatedAt();
 
-    void setCreatedAt(LocalDateTime createdAt);
+    void setCreatedAt(Instant createdAt);
 }

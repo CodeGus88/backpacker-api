@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Data
 @MappedSuperclass
@@ -17,7 +17,7 @@ public class BaseFile<E> extends BaseModel {
 
     @Column(name = "created_at", updatable = false)
     @CreatedDate
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @JoinColumn(name = "entity_uuid", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

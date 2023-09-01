@@ -20,10 +20,15 @@ public class BaseAddressServiceImpl<
         implements BaseAddressService<M, R, MAPPER>{
 
     @Autowired
-    private R repository;
+    protected R repository;
 
     @Autowired
     private MAPPER mapper;
+
+    @Override
+    public M findById(UUID uuid) {
+        return repository.findById(uuid).orElse(null);
+    }
 
     @Override
     public List<M> findAllByEntityUuid(UUID entityUuid) {
@@ -55,8 +60,6 @@ public class BaseAddressServiceImpl<
 
     @Override
     public void deleteByUuid(UUID uuid) {
-        if(!repository.existsById(uuid))
-            throw new CustomException(HttpStatus.NOT_FOUND, "No se encontró el recurso");
         repository.deleteById(uuid);
     }
 
@@ -64,4 +67,7 @@ public class BaseAddressServiceImpl<
     public boolean existsByUuid(UUID uuid) {
         return repository.existsById(uuid);
     }
+
+
+
 }

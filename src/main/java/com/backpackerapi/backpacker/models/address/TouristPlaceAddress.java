@@ -1,4 +1,4 @@
-package com.backpackerapi.backpacker.models.rating;
+package com.backpackerapi.backpacker.models.address;
 
 import com.backpackerapi.backpacker.models.principal_models.TouristPlace;
 import jakarta.persistence.Entity;
@@ -7,7 +7,9 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "tourist_place_rating")
-public class TouristPlaceRating extends BaseRating<TouristPlace> {
-
+@Table(name = "tourist_place_address")
+public class TouristPlaceAddress extends BaseAddress<TouristPlace> {
+    
+    
+    
 }

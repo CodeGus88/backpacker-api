@@ -5,7 +5,7 @@ import com.backpackerapi.backpacker.dtos.tourist_place.TouristPlaceDto;
 import com.backpackerapi.backpacker.dtos.tourist_place.TouristPlaceRequest;
 import com.backpackerapi.backpacker.mappers.TouristPlaceMapper;
 import com.backpackerapi.backpacker.models.Category;
-import com.backpackerapi.backpacker.models.TouristPlace;
+import com.backpackerapi.backpacker.models.principal_models.TouristPlace;
 import com.backpackerapi.backpacker.repositories.CategoryRepository;
 import com.backpackerapi.backpacker.repositories.TouristPlaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.*;
 
 @Service
@@ -44,7 +44,9 @@ public class TouristPlaceServiceImpl implements TouristPlaceService {
     @Override
     public TouristPlaceDto save(TouristPlaceRequest touristPlaceRequest) {
         TouristPlace touristPlace = mapper.requestToEntity(touristPlaceRequest);
-        touristPlace.setCreatedAt(LocalDateTime.now());
+//        touristPlace.setCreatedAt(LocalDateTime.now());
+//        touristPlace.setCreatedAt(ZonedDateTime.now(ZoneId.of("UTC")));
+        touristPlace.setCreatedAt(Instant.now());
         List<Category> categories = new ArrayList<>();
         touristPlaceRequest.getCategories().forEach(i -> {
             Optional<Category> o = catRepository.findById(i);
@@ -68,7 +70,9 @@ public class TouristPlaceServiceImpl implements TouristPlaceService {
             entity.setResume(request.getResume());
             entity.setKeywords(request.getKeywords());
             entity.setDescription(request.getDescription());
-            entity.setUpdatedAt(LocalDateTime.now());
+//            entity.setUpdatedAt(LocalDateTime.now());
+//            entity.setUpdatedAt(ZonedDateTime.now(ZoneId.of("UTC")));
+            entity.setUpdatedAt(Instant.now());
             if(request.getCategories() != null){
                 List<Category> categories = new ArrayList<>();
                 request.getCategories().forEach(i -> {
@@ -88,6 +92,8 @@ public class TouristPlaceServiceImpl implements TouristPlaceService {
     @Transactional
     @Override
     public boolean deleteById(UUID uuid) throws RuntimeException {
+        if(!repository.existsById(uuid))
+            return false;
         repository.deleteById(uuid);
         return true;
     }

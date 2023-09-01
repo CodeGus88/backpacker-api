@@ -1,6 +1,5 @@
 package com.backpackerapi.backpacker.dtos.error;
 
-//import com.backpackerapi.backpacker.dtos.Message;
 
 import com.backpackerapi.backpacker.dtos.Message;
 

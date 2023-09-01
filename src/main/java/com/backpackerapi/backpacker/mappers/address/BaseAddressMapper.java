@@ -7,12 +7,6 @@ import org.mapstruct.Mappings;
 
 public interface BaseAddressMapper<M> {
 
-//    @Mappings(
-//        {
-//            @Mapping(source = "entity.uuid", target = "entityUuid"),
-////            @Mapping(source = "region.Uuid", target = "regionUuid")
-//        }
-//    )
     AddressDto entityToDto(M object);
 
     @Mappings(

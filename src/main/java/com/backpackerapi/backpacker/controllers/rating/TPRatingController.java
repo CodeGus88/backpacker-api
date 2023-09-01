@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/tourist-places-rating")
+@RequestMapping("api/tourist-place-rating")
 @CrossOrigin(origins = "*")
 public class TPRatingController extends BaseRatingController<TouristPlaceRatingService> {
 
     @GetMapping("punctuation/{entityUuid}")
     public ResponseEntity<SimplePunctuationDto> punctuationByEntityUuid(@PathVariable UUID entityUuid) {
-        return ResponseEntity.ok(punctuationByEntityUuid(EEntity.TOURIST_PLACES_RATING, entityUuid));
+        return ResponseEntity.ok(punctuationByEntityUuid(EEntity.TOURIST_PLACE_RATING, entityUuid));
     }
 }

@@ -28,7 +28,7 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools:3.0.4'
 //	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok:1.18.26'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.4'
+
 
 //  Dependencias para la seguridad y autentificación
 	implementation 'com.okta.spring:okta-spring-boot-starter:3.0.3'
@@ -46,6 +46,11 @@ dependencies {
 
 	//	postgresql driver
 	 runtimeOnly 'org.postgresql:postgresql:42.5.4'
+
+
+	// Test
+	testImplementation 'org.mockito:mockito-core:3.6.48'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.4'
 
 }
 

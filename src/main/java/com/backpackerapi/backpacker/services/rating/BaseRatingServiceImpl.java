@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,7 +39,8 @@ public class BaseRatingServiceImpl<ENTITY extends BaseRating, MAPPER extends Bas
             throw new CustomException(HttpStatus.CONFLICT, "El usuario ya tiene registrado puntuación para este recurso");
         ENTITY entity = mapper.requestToEntity(request);
         entity.setUuid(UUID.randomUUID());
-        entity.setCreatedAt(LocalDateTime.now());
+//        entity.setCreatedAt(LocalDateTime.now());
+        entity.setCreatedAt(Instant.now());
         ENTITY savedEntity = repository.save(entity);
         return mapper.entityToRatingItem(savedEntity);
     }

@@ -4,7 +4,7 @@ import com.backpackerapi.backpacker.controllers.file.BaseFileControllerImpl;
 import com.backpackerapi.backpacker.dtos.files.FileDto;
 import com.backpackerapi.backpacker.enums.EEntity;
 import com.backpackerapi.backpacker.enums.EModule;
-import com.backpackerapi.backpacker.models.file.TouristPlaceFile;
+import com.backpackerapi.backpacker.models.file.TouristPlaceImage;
 import com.backpackerapi.backpacker.services.file.tourist_placce_file.TouristPlaceFileService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/media/tourist-place-files")
+@RequestMapping("api/media/tourist-place-images")
 @CrossOrigin(origins = "*")
 public class TouristPlaceFileControllerImpl
-        extends BaseFileControllerImpl<TouristPlaceFileService, TouristPlaceFile>
+        extends BaseFileControllerImpl<TouristPlaceFileService, TouristPlaceImage>
         implements TouristPlaceFileController{
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -28,7 +28,7 @@ public class TouristPlaceFileControllerImpl
     ) {
         if(file.isEmpty() || parentUuid == null)
             return ResponseEntity.badRequest().build();
-        return super.uploadFile(EModule.TOURIST_PLACES, EEntity.TOURIST_PLACE_FILES, parentUuid, file);
+        return super.uploadFile(EModule.TOURIST_PLACES, EEntity.TOURIST_PLACE_IMAGE, parentUuid, file);
     }
 
     @GetMapping("{parentModuleUuid}/{fileName:.+}")

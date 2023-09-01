@@ -1,5 +1,6 @@
 package com.backpackerapi.backpacker.models;
 
+import com.backpackerapi.backpacker.models.principal_models.TouristPlace;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

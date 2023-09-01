@@ -16,7 +16,7 @@ public interface TouristPlaceRatingRepository extends BaseRatingRepository<Touri
     @Query(
             value = """
                 SELECT CASE WHEN (COUNT(*) > 0) = TRUE THEN 'TRUE' ELSE 'FALSE' END
-                FROM tourist_places_rating tpr
+                FROM tourist_place_rating tpr
                 JOIN users u ON u.uuid = tpr.user_id
                 WHERE tpr.entity_fk = :entityUuid AND tpr. = :username
             """,
@@ -28,7 +28,7 @@ public interface TouristPlaceRatingRepository extends BaseRatingRepository<Touri
     @Query(
             value = """
                 SELECT CASE WHEN (COUNT(*) > 0) = TRUE THEN 'TRUE' ELSE 'FALSE' END
-                FROM tourist_places_rating tpr
+                FROM tourist_place_rating tpr
                 WHERE tpr.entity_fk = :entityUuid AND tpr.user_uuid = :userUuid
             """,
             nativeQuery = true
@@ -39,7 +39,7 @@ public interface TouristPlaceRatingRepository extends BaseRatingRepository<Touri
     @Query(
         value = """
                 SELECT tp.uuid entityUuid, COUNT(*) population, ROUND(CAST(AVG(r.punctuation) AS NUMERIC), 2) punctuation
-                FROM tourist_places_rating r
+                FROM tourist_place_rating r
                 JOIN tourist_places tp ON tp.uuid = r.entity_fk
                 WHERE tp.uuid = :entityUuid
                 GROUP BY tp.uuid
@@ -55,7 +55,7 @@ public interface TouristPlaceRatingRepository extends BaseRatingRepository<Touri
             value = """
                     SELECT r.uuid, r.punctuation, r.comment, r.created_at createdAt, u.uuid userUuid, u.uuid userUuid, 
                     u.username, u.name, u.email
-                    FROM tourist_places_rating r
+                    FROM tourist_place_rating r
                     INNER JOIN tourist_places tp ON tp.uuid = r.entity_fk
                     INNER JOIN users u ON u.uuid = r.user_uuid
                     WHERE tp.uuid = :entityUuid
@@ -72,7 +72,7 @@ public interface TouristPlaceRatingRepository extends BaseRatingRepository<Touri
             value = """
                     SELECT tpr.uuid, tpr.punctuation, tpr.comment, u.uuid userUuid,
                            u.name, u.username, u.email, tpr.created_at createdAt
-                    FROM tourist_places_rating tpr
+                    FROM tourist_place_rating tpr
                     INNER JOIN tourist_places e ON e.uuid = tpr.entity_fk
                     INNER JOIN users u ON u.uuid = tpr.user_uuid
                     WHERE e.uuid = :entityUuid AND u.uuid = :userUuid

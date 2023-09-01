@@ -16,6 +16,6 @@ public interface BaseController <ID, ITEM, FORM, DTO>{
 
     ResponseEntity<DTO> update(ID id, FORM request);
 
-    ResponseEntity<Boolean> deleteByUuid(ID id);
+    ResponseEntity<Void> deleteByUuid(ID id);
 
 }

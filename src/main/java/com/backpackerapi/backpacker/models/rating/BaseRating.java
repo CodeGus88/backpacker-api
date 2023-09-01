@@ -5,7 +5,8 @@ import com.backpackerapi.backpacker.security.entity.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
-import java.time.LocalDateTime;
+
+import java.time.Instant;
 
 @Data
 @MappedSuperclass
@@ -26,6 +27,6 @@ public class BaseRating<E> extends BaseModel {
 
     @Column(name = "created_at", updatable = false)
     @CreatedDate
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
 }

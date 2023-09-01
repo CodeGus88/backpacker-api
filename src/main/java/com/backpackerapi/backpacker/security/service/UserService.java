@@ -101,7 +101,10 @@ public class UserService {
         UserDetails userDetails = null;
         if(principal instanceof UserDetails)
             userDetails = (UserDetails) principal;
-        return userDetails;
+        if(userDetails != null)
+            return userDetails;
+        else
+            throw new CustomException(HttpStatus.NOT_FOUND, "sin autentificar");
     }
 
     /**
@@ -112,7 +115,9 @@ public class UserService {
         UserDetails userDetails = getAuthUserDetails();
         User user = null;
         if(userDetails != null)
-            user = userRepository.findByUsername(userDetails.getUsername()).orElse(null);
+            user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(() ->{
+                throw new CustomException(HttpStatus.NOT_FOUND, "el usuario no existe");
+            });
         return user;
     }
 }

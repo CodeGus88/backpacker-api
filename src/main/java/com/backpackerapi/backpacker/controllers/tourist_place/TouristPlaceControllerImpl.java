@@ -80,12 +80,14 @@ public class TouristPlaceControllerImpl implements TouristPlaceController, Image
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("{uuid}")
     @Override
-    public ResponseEntity<Boolean> deleteByUuid(@PathVariable UUID uuid) {
+    public ResponseEntity<Void> deleteByUuid(@PathVariable UUID uuid) {
         if(storageService.existDirectoryByName(EModule.TOURIST_PLACES, uuid))
             storageService.deleteParentDirectory(EModule.TOURIST_PLACES, uuid);
         if(!storageService.existDirectoryByName(EModule.TOURIST_PLACES, uuid))
-            return ResponseEntity.ok().body(touristPlaceService.deleteById(uuid));
-        return ResponseEntity.ok(false);
+            if(touristPlaceService.deleteById(uuid))
+                return ResponseEntity.noContent().build();
+            else return ResponseEntity.notFound().build();
+        return ResponseEntity.internalServerError().build();
     }
 
     @PreAuthorize("hasRole('ADMIN')")

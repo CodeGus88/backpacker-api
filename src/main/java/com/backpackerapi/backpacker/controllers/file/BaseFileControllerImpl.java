@@ -13,7 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
-import java.time.LocalDateTime;
+
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -40,7 +41,8 @@ public class BaseFileControllerImpl
         request.setUuid(UUID.randomUUID());
         request.setFile(fileData.get("name"));
         request.setEntityUuid(entityUuid);
-        request.setCreatedAt(LocalDateTime.now());
+//        request.setCreatedAt(LocalDateTime.now());
+        request.setCreatedAt(Instant.now());
         request.setTableName(eEntity.name().toLowerCase());
         return ResponseEntity.ok().body(service.save(request));
     }

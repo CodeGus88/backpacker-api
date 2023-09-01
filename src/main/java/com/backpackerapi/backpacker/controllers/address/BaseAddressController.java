@@ -2,6 +2,7 @@ package com.backpackerapi.backpacker.controllers.address;
 
 import com.backpackerapi.backpacker.dtos.address.AddressDto;
 import com.backpackerapi.backpacker.dtos.address.AddressRequest;
+import com.backpackerapi.backpacker.models.address.TravelAgencyAddress;
 import com.backpackerapi.backpacker.services.address.BaseAddressService;
 import org.springframework.http.ResponseEntity;
 
